@@ -4,16 +4,16 @@ services:
   dev-postgres:
     image: postgres
     ports:
-      - 5432:5432
+      - 5442:5432
     environment:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=mysecretpassword
     volumes:
-      - ${HOME}/postgres-data-dev/:/var/lib/postgresql/data
+      - ${HOME}/iot-postgres-data/:/var/lib/postgresql/data
   pgadmin:
     image: dpage/pgadmin4
     ports:
-      - 80:80
+      - 90:80
     environment:
       - PGADMIN_DEFAULT_EMAIL=user@domain.local
       - PGADMIN_DEFAULT_PASSWORD=SuperSecret

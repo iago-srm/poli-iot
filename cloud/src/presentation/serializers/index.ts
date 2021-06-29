@@ -1,1 +1,1 @@
-export * from './user-serializer';
+export * from './temperature.serializer';
