@@ -1,0 +1,39 @@
+/* .input {
+  border-color: #6dcff6;
+  box-shadow: 0 0 5px rgba(109, 207, 246, 0.5);
+  outline: none;
+  border-radius: 20px;
+  padding: 8px;
+  font-size: 1rem;
+  padding: 0.5em;
+  margin: 1em 0;
+  width: 100%;
+} 
+
+.error {
+  border-color: red;
+}
+*/
+
+.input {
+  background-color: rgb(200, 200, 200);
+  outline: none;
+  padding: 8px;
+  border: none;
+  width: 100%;
+  border-radius: 10px;
+}
+
+.inputError {
+  border-bottom: 2px solid red;
+}
+
+.errorMessageContainer {
+  height: 2em;
+  text-align: center;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: red;
+}
