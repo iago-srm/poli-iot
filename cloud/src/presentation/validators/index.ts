@@ -1,6 +1,5 @@
 import { body, param } from "express-validator";
 import { UserMessageNames } from "../../locales";
-import { UserRole } from "@domain";
 
 export const getEmailValidator = (where: "body" | "params" = "body") => {
   const root = where === "body" ? body("email") : param("email");
@@ -36,23 +35,9 @@ export const getPasswordValidator = () =>
     .matches(/^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{6,}$/)
     .withMessage(UserMessageNames.PASSWORD.INVALID_PATTERN);
 
-export const getUsernameValidator = (required = false) => {
-  return required
-    ? body("username")
-        .exists()
-        .withMessage(UserMessageNames.USERNAME.NOT_PROVIDED)
-        .bail()
-        .notEmpty()
-        .withMessage(UserMessageNames.USERNAME.NULL)
-        .bail()
-        .isLength({ min: 4, max: 32 })
-        .withMessage(UserMessageNames.USERNAME.INVALID_LENGTH)
-    : body("username").optional();
-};
-
-export const getRoleValidator = () => {
-  return body("role")
-    .optional()
-    .custom((value) => value === UserRole.ADMIN || value === UserRole.COMMON)
-    .withMessage(UserMessageNames.ROLE.INVALID_PATTERN);
+export const getDeviceValidator = (device: string) => {
+  return body(device)
+    .exists()
+    .withMessage(`Valor de ${device} não fornecido.`)
+    .bail();
 };

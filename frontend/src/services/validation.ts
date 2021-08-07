@@ -22,20 +22,11 @@ export const loginSchema = yup.object().shape({
 })
 
 export const registerSchema = yup.object().shape({
-  email: yup
-    .string()
-    .required(ValidationMessages.REQUIRED)
-    .email(ValidationMessages.INVALID_EMAIL),
-  password: yup
-    .string()
-    .required(ValidationMessages.REQUIRED)
-    .matches(
-      /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{6,}$/,
-      ValidationMessages.INVALID_PASSWORD
-    ),
-  confirmPassword: yup
-    .mixed()
-    .test('match', ValidationMessages.PASSWORD_DONT_MATCH, function () {
-      return this.parent.password === this.parent.confirmPassword
-    }),
+  name: yup.string().required(ValidationMessages.REQUIRED),
+  // .email(ValidationMessages.INVALID_EMAIL),
+  deviceNum: yup.number().required(ValidationMessages.REQUIRED),
+  // .matches(
+  //   /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{6,}$/,
+  //   ValidationMessages.INVALID_PASSWORD
+  // ),
 })

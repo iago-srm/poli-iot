@@ -1,0 +1,21 @@
+.container {
+  width: 100vw;
+  height: 10vh;
+  background-color: black;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+}
+
+.button {
+  display: inline-block;
+  padding: 3vh;
+}
+
+.button:hover {
+  background-color: grey;
+}
+
+.activeButton {
+  font-weight: 700;
+}

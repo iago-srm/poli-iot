@@ -15,3 +15,8 @@ select:-webkit-autofill:focus {
 body {
   background-color: rgb(220, 220, 255);
 }
+
+a, a:hover { 
+  text-decoration: none;
+  color: white;
+}

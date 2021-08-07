@@ -1,14 +1,14 @@
 import { DatabaseError } from "@iagosrm/common";
 import { createConnection, Connection, UpdateResult } from "typeorm";
-// import { IDatabase } from "@domain";
 
 export interface IDatabase {
   _connection: any;
   dbConnectionName: string;
   init: () => Promise<void>;
   closeConnection: () => Promise<void>;
-  getOne: <P>(table: string, where: any) => Promise<P | undefined>;
-  getAll: <P>(table: string) => Promise<P[]>;
+  getOne: <P>(table: string, where: any) => Promise<any>;
+  getMany: <P>(table: string, where?: any) => Promise<P[]>;
+  getById: <P>(table: string, id: string) => Promise<P | undefined>;
   insert: <P>(table: string, entry: P | P[]) => Promise<P[]>;
   updateOne: <P>(
     table: string,
@@ -41,18 +41,31 @@ export class Database implements IDatabase {
 
   async getOne<P>(table: string, where: any) {
     try {
-      const result = await this._connection
-        .getRepository<P>(table)
-        .findOne(where);
+      const result = await this._connection.getRepository(table).find({
+        where,
+        take: 1,
+        order: { id: "DESC" },
+      });
       return result;
     } catch {
       throw new DatabaseError();
     }
   }
 
-  async getAll<P>(table: string) {
+  async getById<P>(table: string, id: string) {
     try {
-      const result = await this._connection.getRepository<P>(table).find();
+      const result = await this._connection.getRepository<P>(table).findOne(id);
+      return result;
+    } catch {
+      throw new DatabaseError();
+    }
+  }
+
+  async getMany<P>(table: string, where?: any) {
+    try {
+      const result = await this._connection
+        .getRepository<P>(table)
+        .find({ where });
       return result;
     } catch {
       console.log("error");
@@ -74,7 +87,7 @@ export class Database implements IDatabase {
           409
         );
       }
-      throw new DatabaseError();
+      throw new DatabaseError(e.message);
     }
   }
 

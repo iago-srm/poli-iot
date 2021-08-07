@@ -9,7 +9,8 @@ import cors from "cors";
 
 interface ApplicationParams {
   middleware: { [key: string]: RequestHandler };
-  userRouter: Router;
+  gardenRouter: Router;
+  snapshotRouter: Router;
   db: Database;
 }
 
@@ -19,7 +20,12 @@ export class Application {
   _server: Server;
   baseUrn = "api/v1";
 
-  constructor({ middleware, userRouter, db }: ApplicationParams) {
+  constructor({
+    middleware,
+    gardenRouter,
+    snapshotRouter,
+    db,
+  }: ApplicationParams) {
     this._app = express();
     this._db = db;
 
@@ -45,7 +51,8 @@ export class Application {
     this._app.disable("x-powered-by");
 
     // Routers
-    this._app.use(`/${this.baseUrn}/users`, userRouter);
+    this._app.use(`/${this.baseUrn}/gardens`, gardenRouter);
+    this._app.use(`/${this.baseUrn}/snapshots`, snapshotRouter);
 
     this._app.all("*", () => {
       throw new NotFoundError();
@@ -58,7 +65,7 @@ export class Application {
     await this._db.init();
     if (process.env.NODE_ENV !== "test") {
       this._server = this._app.listen(
-        parseInt(process.env.APP_PORT || "3000"),
+        parseInt(process.env.APP_PORT || "3001"),
         () => {
           console.log(`Listening on port ${process.env.APP_PORT}`);
         }

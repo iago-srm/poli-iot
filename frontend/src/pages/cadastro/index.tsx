@@ -1,20 +1,17 @@
 import React from 'react';
-import { Form, Input } from "@iago-srm/nextjs-components.ui.form";
+import { Form } from "@iago-srm/nextjs-components.ui.form";
+import { Input } from "@iago-srm/nextjs-components.ui.form-input";
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
+
 import inputStyles from '../../styles/input.module.css';
 import pageStyles from '../../styles/page.module.css';
-import { Frame, Button } from '../../components';
+
+import { Frame, Button, Alerts } from '../../components';
 import { registerSchema } from '../../services/validation';
 import { register } from '../../services';
-import Alert from 'react-bootstrap/Alert';
-
-interface IAlert {
-  id?: number;
-  message: string;
-  variant: "danger" | "success";
-}
+import { useApiCall } from '../../services';
 
 interface FormValues {
   email: string;
@@ -27,64 +24,39 @@ const defaultValues = {
   password: ''
 }
 
+const success = {
+  status: 200,
+  message: "Cadastro realizado com sucesso!"
+};
+
 const Cadastro = (): JSX.Element => {
 
-  const [alerts, setAlerts] = React.useState<IAlert[]>([]);
-  const [loading, setLoading] = React.useState(false);
+  const { apiCall, errors, loading, response } = useApiCall(register);
 
-  const handleAlert = React.useCallback((rawAlert: IAlert) => {
-    const id = alerts.length;
-    setAlerts(alerts => [...alerts, {
-      id,
-      message: rawAlert.message,
-      variant: rawAlert.variant
-    }]);
-    setTimeout(() => setAlerts(alerts => alerts.filter(alert => alert.id !== id)), 3000);
-  }, [alerts.length, setAlerts]);
-
-  const handleSubmit = async (formData: FormValues) => {
-    setLoading(true);
-    try{
-      const response = await register(formData);
-      handleAlert({
-        message: response.data,
-        variant: "success"
-      });
-      setLoading(false);
-    } catch (error) {
-      error.response ? error.response.data.errors.forEach(error => {
-        handleAlert({
-          message: error.message,
-          variant: "danger"
-        });
-      }) : handleAlert({message: error.message, variant: "danger"});
-      setLoading(false);
-    }
-  }
-
-  const handleAlertClose = (alert: IAlert) => {
-    setAlerts(alerts => alerts.filter(a => a.id !== alert.id));
-  };
+  const handleSubmit = React.useCallback(async (formData: FormValues) => {
+    await apiCall(formData);
+  },[apiCall]);
 
   return (
-    <div className={pageStyles.container}>
+    <div className={pageStyles.totalCenterContainer}>
+      <h2>Crie uma nova conta</h2>
       <Container>
         <Row>
           <Col>
-            {alerts.map((alert, i) => <Alert onClose={() => handleAlertClose(alert)} key={i} variant={alert.variant} dismissible>{alert.message}</Alert>)}
+            <Alerts errors={errors} success={response ? success : undefined}/>
           </Col>
         </Row>
       </Container>
       <Container fluid>
         <Row>
-          <Col xs={{span: 10, offset: 1}} sm={{span: 8, offset: 2}} md={{span: 6, offset: 3}}>
+          <Col xs={{ span: 10, offset: 1 }} sm={{ span: 8, offset: 2 }} md={{ span: 6, offset: 3 }}>
             <Frame>
-              <Form defaultValues={defaultValues} onSubmit={handleSubmit} 
-              schema={registerSchema} styles={inputStyles} 
+              <Form defaultValues={defaultValues} onSubmit={handleSubmit}
+                schema={registerSchema} styles={inputStyles}
               >
-                <Input name='email' placeholder="E-mail"/>
-                <Input name='password' placeholder="Senha"/>
-                <Input name='confirmPassword' placeholder="Confirme a senha"/>
+                <Input name='email' placeholder="E-mail" />
+                <Input name='password' placeholder="Senha" />
+                <Input name='confirmPassword' placeholder="Confirme a senha" />
                 <Button loading={loading}>Cadastrar</Button>
               </Form>
             </Frame>
@@ -94,6 +66,5 @@ const Cadastro = (): JSX.Element => {
     </div>
   )
 };
-
 
 export default Cadastro;

@@ -7,9 +7,12 @@ import {
 } from "awilix";
 import { json } from "body-parser";
 import { errorHandler, startPolyglot } from "@iagosrm/common";
-
-import { UserUseCase } from "@application";
-import { makeUserRouter } from "@presentation";
+import {
+  GardenUseCase,
+  MeasurementUseCase,
+  SnapshotUseCase,
+} from "@application";
+import { makeGardenRouter, makeSnapshotRouter } from "@presentation";
 import { Database } from "@infrastructure";
 import { Application } from "./app";
 import { Messages } from "@locales";
@@ -23,7 +26,6 @@ export enum MiddlewareNames {
 
 export enum Dependencies {
   APP = "app",
-  USERUSECASE = "userUseCase",
   DB = "db",
 }
 
@@ -43,10 +45,13 @@ rootContainer.register({
   }),
 
   // register use cases
-  [Dependencies.USERUSECASE]: asFunction(UserUseCase).classic(),
+  gardenUseCase: asFunction(GardenUseCase).classic(),
+  measurementUseCase: asFunction(MeasurementUseCase).classic(),
+  snapshotUseCase: asFunction(SnapshotUseCase).classic(),
 
   // register routers
-  userRouter: asFunction(makeUserRouter).classic(),
+  gardenRouter: asFunction(makeGardenRouter).classic(),
+  snapshotRouter: asFunction(makeSnapshotRouter).classic(),
 });
 
 const container = rootContainer.createScope();

@@ -1,7 +1,15 @@
-.container {
-  height: 100vh;
+.totalCenterContainer {
+  height: 90vh;
   justify-content: center;
   align-items: center;
   display: flex;
   flex-direction: column;
+}
+
+.container {
+  height: 90vh;
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  justify-content: space-around;
 }
