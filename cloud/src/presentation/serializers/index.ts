@@ -1,4 +1,4 @@
-import { Garden, Device, Snapshot } from "@domain";
+import { Garden, Snapshot } from "@domain";
 
 export const gardenSerializer = (payload: any) => {
   const userId = payload.userId;
@@ -12,16 +12,11 @@ export const gardenSerializer = (payload: any) => {
   garden.name = gardenName;
   garden.description = description;
   garden.deviceNum = deviceNum;
-  garden.devices = [];
-
-  for (let i = 0; i < deviceNum; i++) {
-    garden.devices.push(new Device());
-  }
 
   return garden;
 };
 
-export const snapshotSerializer = (payload: any) => {
+export const snapshotSerializer = (_: any) => {
   const snapshot = new Snapshot();
   return snapshot;
 };

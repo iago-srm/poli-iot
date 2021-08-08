@@ -23,8 +23,7 @@ export const SnapshotUseCase = (db: IDatabase) => {
   return {
     getGarden: (gardenId: string) =>
       db.getById<Garden>(TableNames.GARDEN, gardenId),
-    getSnapshot: (garden: Garden) =>
-      db.getOne<Snapshot>(TableNames.SNAPSHOT, { garden }),
+    getSnapshot: (garden: Garden) => db.getOne(TableNames.SNAPSHOT, { garden }),
     insertSnapshot: (t: Snapshot | Snapshot[]) =>
       db.insert<Snapshot>(TableNames.SNAPSHOT, t),
     getMeasurements: (snapshot: Snapshot) =>
