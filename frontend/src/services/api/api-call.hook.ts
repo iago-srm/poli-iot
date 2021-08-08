@@ -23,7 +23,7 @@ export const useApiCall = <Params = any, Resp = any>(
       setLoading(true)
       try {
         const resp = await usecase(args)
-        console.log(resp)
+        // console.log(resp)
         if (typeof resp.data === 'string' || resp.data) {
           setResponse({ data: resp.data, status: resp.status })
         }
