@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { DatabaseError, validateRequest } from "@iagosrm/common";
+import { DatabaseError, NotFoundError, validateRequest } from "@iagosrm/common";
 import { ISnapshotUseCase } from "@application";
 import { snapshotSerializer } from "../serializers";
 import { Measurement, Snapshot } from "@domain";
@@ -15,12 +15,17 @@ export const makeSnapshotRouter = (snapshotUseCase: ISnapshotUseCase) => {
     const garden = await getGarden(gardenId);
     try {
       const snapshot = garden && (await getSnapshot(garden));
-      const measurements = await getMeasurements(snapshot[0]);
-      res.status(200).json({
-        id: snapshot[0].id,
-        time: snapshot[0].createdAt,
-        measurements,
-      });
+      const measurements =
+        snapshot.length && (await getMeasurements(snapshot[0]));
+      if (measurements) {
+        res.status(200).json({
+          id: snapshot[0].id,
+          time: snapshot[0].createdAt,
+          measurements,
+        });
+      } else {
+        res.sendStatus(200);
+      }
     } catch {
       throw new DatabaseError();
     }

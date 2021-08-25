@@ -8,7 +8,7 @@ services:
     depends_on:
       postgres:
         condition: service_healthy
-    command: ["./wait-for-it.sh", "db:5432", "--", "npm", "start"]
+    command: ["npm", "start"]
   postgres:
     image: postgres
     ports:
@@ -18,7 +18,7 @@ services:
       - POSTGRES_PASSWORD=mysecretpassword
       - POSTGRES_DB=test
     volumes:
-      - ${HOME}/postgres-data/:/var/lib/postgresql/data
+      - ${HOME}/iot-postgres-data/:/var/lib/postgresql/data
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U postgres"]
       interval: 5s

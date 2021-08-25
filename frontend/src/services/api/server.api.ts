@@ -7,7 +7,7 @@ const cloudHost = axios.create({
 export const getGardensApi = (userId: number) =>
   cloudHost.get(`/gardens/${userId}`)
 
-export const getSnapshotsApi = (gardenId: number) =>
+export const getSnapshotApi = (gardenId: number) =>
   cloudHost.get(`/snapshots/${gardenId}`)
 
 export interface InsertGardenParams {

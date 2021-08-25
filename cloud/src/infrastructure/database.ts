@@ -47,8 +47,8 @@ export class Database implements IDatabase {
         order: { id: "DESC" },
       });
       return result;
-    } catch {
-      throw new DatabaseError();
+    } catch (e) {
+      throw new DatabaseError(e.message);
     }
   }
 
@@ -56,8 +56,8 @@ export class Database implements IDatabase {
     try {
       const result = await this._connection.getRepository<P>(table).findOne(id);
       return result;
-    } catch {
-      throw new DatabaseError();
+    } catch (e) {
+      throw new DatabaseError(e.message);
     }
   }
 
