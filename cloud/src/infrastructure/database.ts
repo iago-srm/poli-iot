@@ -6,7 +6,7 @@ export interface IDatabase {
   dbConnectionName: string;
   init: () => Promise<void>;
   closeConnection: () => Promise<void>;
-  getOne: (table: string, where: any) => Promise<any>;
+  getLast: <P>(table: string, where: any) => Promise<P>;
   getMany: <P>(table: string, where?: any) => Promise<P[]>;
   getById: <P>(table: string, id: string) => Promise<P | undefined>;
   insert: <P>(table: string, entry: P | P[]) => Promise<P[]>;
@@ -39,14 +39,14 @@ export class Database implements IDatabase {
     return this._connection.close();
   }
 
-  async getOne(table: string, where: any) {
+  async getLast<P>(table: string, where: any) {
     try {
-      const result = await this._connection.getRepository(table).find({
+      const result = await this._connection.getRepository<P>(table).find<P>({
         where,
         take: 1,
         order: { id: "DESC" },
       });
-      return result;
+      return result[0];
     } catch (e) {
       throw new DatabaseError(e.message);
     }

@@ -1,7 +1,11 @@
 import { Router } from "express";
-import { DatabaseError, NotFoundError, validateRequest } from "@iagosrm/common";
+import {
+  DatabaseError,
+  BadRequestError,
+  validateRequest,
+} from "@iagosrm/common";
 import { ISnapshotUseCase } from "@application";
-import { snapshotSerializer } from "../serializers";
+import { snapshotSerializer, gardenSerializer } from "../serializers";
 import { Measurement, Snapshot } from "@domain";
 
 export const makeSnapshotRouter = (snapshotUseCase: ISnapshotUseCase) => {
@@ -10,44 +14,51 @@ export const makeSnapshotRouter = (snapshotUseCase: ISnapshotUseCase) => {
 
   const snapshotRouter = Router();
 
+  const _getGarden = async (req) => {
+    const reqGarden = gardenSerializer(req.params);
+    const garden = await getGarden(reqGarden);
+    if (!garden) {
+      throw new BadRequestError("Could not find garden.");
+    }
+    return garden;
+  };
+
   snapshotRouter.get("/:gardenId", async (req, res, __) => {
-    const gardenId = req.params.gardenId;
-    const garden = await getGarden(gardenId);
+    const garden = await _getGarden(req);
+    let snapshot: Snapshot;
+
     try {
-      const snapshot = garden && (await getSnapshot(garden));
-      const measurements =
-        snapshot.length && (await getMeasurements(snapshot[0]));
-      if (measurements) {
-        res.status(200).json({
-          id: snapshot[0].id,
-          time: snapshot[0].createdAt,
-          measurements,
-        });
-      } else {
-        res.sendStatus(200);
-      }
-    } catch {
-      throw new DatabaseError();
+      snapshot = await getSnapshot(garden);
+    } catch (e) {
+      throw new DatabaseError(e.message);
+    }
+
+    if (!snapshot)
+      throw new BadRequestError("This garden has no snapshots yet");
+
+    let measurements: Measurement[];
+    try {
+      measurements = await getMeasurements(snapshot);
+      res.status(200).json({
+        id: snapshot.id,
+        time: snapshot.createdAt,
+        measurements,
+      });
+    } catch (e) {
+      throw new DatabaseError(e.message);
     }
   });
 
   snapshotRouter.post("/:gardenId", validateRequest, async (req, res, _) => {
-    const gardenId = req.params.gardenId;
-    const garden = await getGarden(gardenId);
-    const snapshot = new Snapshot();
-    if (garden) snapshot.garden = garden;
-    snapshot.measurements = [];
-    for (let i = 0; i < req.body.snapshot.length; i++) {
-      const measurement = new Measurement();
-      measurement.deviceId = req.body.snapshot[i].device;
-      measurement.humidity = req.body.snapshot[i].humidity;
-      measurement.luminosity = req.body.snapshot[i].luminosity;
-      measurement.temperature = req.body.snapshot[i].temperature;
-      snapshot.measurements.push(measurement);
-    }
+    const garden = await _getGarden(req);
 
-    // const snapshot = snapshotSerializer(req.body);
-    await insertSnapshot(snapshot);
+    const snapshot = snapshotSerializer(req.body, garden);
+
+    try {
+      await insertSnapshot(snapshot);
+    } catch (e) {
+      throw new DatabaseError(e.message);
+    }
 
     res.sendStatus(200);
   });
