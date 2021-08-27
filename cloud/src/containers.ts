@@ -5,7 +5,6 @@ import {
   asFunction,
   AwilixContainer,
 } from "awilix";
-import { json } from "body-parser";
 import { errorHandler, startPolyglot } from "@iagosrm/common";
 import {
   GardenUseCase,
@@ -41,7 +40,6 @@ rootContainer.register({
   middleware: asValue({
     [MiddlewareNames.errorHandler]: errorHandler,
     [MiddlewareNames.polyglot]: startPolyglot(Messages),
-    [MiddlewareNames.json]: json(),
   }),
 
   // register use cases

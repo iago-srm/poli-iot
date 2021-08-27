@@ -6,6 +6,7 @@ import { Database } from "@infrastructure";
 import { Server } from "http";
 import helmet from "helmet";
 import cors from "cors";
+import { json } from "body-parser";
 
 interface ApplicationParams {
   middleware: { [key: string]: RequestHandler };
@@ -43,7 +44,7 @@ export class Application {
     this._app.use(cors(corsOptionsDelegate));
 
     //Middleware
-    this._app.use(middleware.json);
+    this._app.use(json());
     this._app.use(middleware.polyglot);
 
     // Security

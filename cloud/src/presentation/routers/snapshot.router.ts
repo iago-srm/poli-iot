@@ -7,6 +7,7 @@ import {
 import { ISnapshotUseCase } from "@application";
 import { snapshotSerializer, gardenSerializer } from "../serializers";
 import { Measurement, Snapshot } from "@domain";
+import { getSnapshotValidator } from "@presentation";
 
 export const makeSnapshotRouter = (snapshotUseCase: ISnapshotUseCase) => {
   const { getSnapshot, insertSnapshot, getGarden, getMeasurements } =
@@ -49,19 +50,24 @@ export const makeSnapshotRouter = (snapshotUseCase: ISnapshotUseCase) => {
     }
   });
 
-  snapshotRouter.post("/:gardenId", validateRequest, async (req, res, _) => {
-    const garden = await _getGarden(req);
+  snapshotRouter.post(
+    "/:gardenId",
+    getSnapshotValidator(),
+    validateRequest,
+    async (req, res, _) => {
+      const garden = await _getGarden(req);
 
-    const snapshot = snapshotSerializer(req.body, garden);
+      const snapshot = snapshotSerializer(req.body, garden);
 
-    try {
-      await insertSnapshot(snapshot);
-    } catch (e) {
-      throw new DatabaseError(e.message);
+      try {
+        await insertSnapshot(snapshot);
+      } catch (e) {
+        throw new DatabaseError(e.message);
+      }
+
+      res.sendStatus(200);
     }
-
-    res.sendStatus(200);
-  });
+  );
 
   return snapshotRouter;
 };

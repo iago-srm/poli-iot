@@ -1,18 +1,18 @@
-import { UserMessageNames } from "../messages.enum";
+import { SnapshotMessageNames, GardenMessageNames } from "../messages.enum";
 
 export const English = {
-  [UserMessageNames.USERNAME.NOT_PROVIDED]: "A username must be provided.",
-  [UserMessageNames.USERNAME.NULL]: "Username cannot be null or empty.",
-  [UserMessageNames.USERNAME.INVALID_LENGTH]:
-    "Must have min 4 and max 32 characters.",
-  [UserMessageNames.EMAIL.NOT_PROVIDED]: "An e-mail must be provided.",
-  [UserMessageNames.EMAIL.NULL]: "E-mail cannot be null.",
-  [UserMessageNames.EMAIL.INVALID_PATTERN]: "E-mail is not valid.",
-  [UserMessageNames.PASSWORD.NOT_PROVIDED]: "A password must be provided.",
-  [UserMessageNames.PASSWORD.NULL]: "Password cannot be null.",
-  [UserMessageNames.PASSWORD.INVALID_LENGTH]:
-    "Password must be between 6 and 32 characters.",
-  [UserMessageNames.PASSWORD.INVALID_PATTERN]:
-    "Password must have at least 1 uppercase, 1 lowercase letter and 1 number.",
-  [UserMessageNames.ROLE.INVALID_PATTERN]: "There is no such role",
+  [SnapshotMessageNames.SNAPSHOT.INVALID_FORMAT]:
+    "Please, check the names of the measurements",
+  [SnapshotMessageNames.SNAPSHOT.LIST_EMPTY]:
+    "The snapshot list cannot be empty",
+  [SnapshotMessageNames.SNAPSHOT.NOT_A_LIST]:
+    "The property snapshot must be a list",
+  [SnapshotMessageNames.SNAPSHOT.NOT_PROVIDED]:
+    "Plase, provide a snapshot property",
+  [GardenMessageNames.DEVICENUM.NOT_A_NUMBER]:
+    "The property deviceNum must be a number",
+  [GardenMessageNames.DEVICENUM.NOT_PROVIDED]:
+    "Plase, provide a deviceNum property",
+  [GardenMessageNames.NAME.NOT_PROVIDED]: "Plase, provide a name property",
+  [GardenMessageNames.USERID.NOT_PROVIDED]: "Plase, provide a userId property",
 };

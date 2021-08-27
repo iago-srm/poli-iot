@@ -2,6 +2,7 @@ import { Router } from "express";
 import { DatabaseError, validateRequest } from "@iagosrm/common";
 import { IGardenUseCase } from "@application";
 import { gardenSerializer } from "../serializers";
+import { getGardenValidator } from "@presentation";
 
 export const makeGardenRouter = (gardenUseCase: IGardenUseCase) => {
   const { getGardens, insertGarden } = gardenUseCase;
@@ -18,12 +19,17 @@ export const makeGardenRouter = (gardenUseCase: IGardenUseCase) => {
     }
   });
 
-  gardenRouter.post("/", validateRequest, async (req, res, _) => {
-    const garden = gardenSerializer(req.body);
-    await insertGarden(garden);
+  gardenRouter.post(
+    "/",
+    getGardenValidator(),
+    validateRequest,
+    async (req, res, _) => {
+      const garden = gardenSerializer(req.body);
+      await insertGarden(garden);
 
-    res.sendStatus(200);
-  });
+      res.sendStatus(200);
+    }
+  );
 
   return gardenRouter;
 };
