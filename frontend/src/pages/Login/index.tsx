@@ -29,7 +29,7 @@ const success = {
 const Login = (): JSX.Element => {
 
   // const [alerts, setAlerts] = React.useState<IAlert[]>([]);
-  const { login, loading, errors, response } = React.useContext(AuthContext);
+  const { login, loginLoading, loginErrors, loginResponse } = React.useContext(AuthContext);
 
   // const handleAlert = React.useCallback((rawAlert: IAlert) => {
   //   const id = alerts.length;
@@ -64,7 +64,7 @@ const Login = (): JSX.Element => {
       <Container>
         <Row>
           <Col>
-            <Alerts errors={errors} success={response ?  success : undefined}/>
+            <Alerts errors={loginErrors} success={loginResponse ?  success : undefined}/>
           </Col>
         </Row>
       </Container>
@@ -77,7 +77,7 @@ const Login = (): JSX.Element => {
               >
                 <Input name='email' placeholder="e-mail" />
                 <Input name='password' placeholder="senha" />
-                <Button loading={loading}>Entrar</Button>
+                <Button loading={loginLoading}>Entrar</Button>
               </Form>
             </Frame>
           </Col>

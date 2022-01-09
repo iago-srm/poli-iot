@@ -7,26 +7,31 @@ enum ValidationMessages {
   PASSWORD_DONT_MATCH = 'Confirmação de senha é diferente.',
 }
 
+const emailValidation = yup
+  .string()
+  .required(ValidationMessages.REQUIRED)
+  .email(ValidationMessages.INVALID_EMAIL);
+const passwordValidation = yup
+  .string()
+  .required(ValidationMessages.REQUIRED)
+  .matches(
+    /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{6,}$/,
+    ValidationMessages.INVALID_PASSWORD
+  )
 export const loginSchema = yup.object().shape({
-  email: yup
-    .string()
-    .required(ValidationMessages.REQUIRED)
-    .email(ValidationMessages.INVALID_EMAIL),
-  password: yup
-    .string()
-    .required(ValidationMessages.REQUIRED)
-    .matches(
-      /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{6,}$/,
-      ValidationMessages.INVALID_PASSWORD
-    ),
+  email: emailValidation,
+  password: passwordValidation
 })
 
 export const registerSchema = yup.object().shape({
+  email: emailValidation,
+  password: passwordValidation,
+  confirmPassword: yup
+    .string()
+    .oneOf([yup.ref('password'), null], ValidationMessages.PASSWORD_DONT_MATCH),
+})
+
+export const newGardenSchema = yup.object().shape({
   name: yup.string().required(ValidationMessages.REQUIRED),
-  // .email(ValidationMessages.INVALID_EMAIL),
   deviceNum: yup.number().required(ValidationMessages.REQUIRED),
-  // .matches(
-  //   /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{6,}$/,
-  //   ValidationMessages.INVALID_PASSWORD
-  // ),
 })

@@ -34,6 +34,7 @@
     "@iagosrm/common": "^1.0.14",
     "axios": "^0.21.1",
     "bootstrap": "^4.6.0",
+    "jsonwebtoken": "^8.5.1",
     "next": "latest",
     "nookies": "^2.5.2",
     "react": "^17.0.1",

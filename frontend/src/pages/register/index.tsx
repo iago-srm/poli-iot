@@ -34,6 +34,7 @@ const Cadastro = (): JSX.Element => {
   const { apiCall, errors, loading, response } = useApiCall(register);
 
   const handleSubmit = React.useCallback(async (formData: FormValues) => {
+    console.log(formData);
     await apiCall(formData);
   },[apiCall]);
 

@@ -8,7 +8,7 @@ import { parseCookies } from 'nookies'
 
 import inputStyles from '../../styles/input.module.css';
 import { Frame, Button, Form, Input, LoadingErrorData } from '../../components';
-import { registerSchema } from '../../services/validation';
+import { newGardenSchema } from '../../services/validation';
 import { useApiCall, getGardensApi, insertGardenApi, InsertGardenParams } from '../../services';
 import { AuthContext } from '../../contexts/auth.context';
 import { CookieNames } from '../../constants/names.enum';
@@ -86,7 +86,7 @@ const Gardens = (): JSX.Element => {
           <h3>New Garden</h3>
           <Frame>
             <Form onSubmit={handleSubmit}
-              schema={registerSchema} styles={inputStyles}
+              schema={newGardenSchema} styles={inputStyles}
             >
               <Input name='name' placeholder="Name of your garden" />
               <Input name='deviceNum' type="number" placeholder="Number of devices in the garden" />
